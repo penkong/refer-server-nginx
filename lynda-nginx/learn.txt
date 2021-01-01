@@ -1,0 +1,274 @@
+nginx vs apache 
+
+c-like syntax vs xml
+
+centeralize location vs .htaccess files
+
+extenral need for dynamic process vs bundle files in module and provide them to client 
+
+
+better static vs low static
+
+
+use virtualbox to create vms
+
+we use vagrant as interface of virtualbox and automate tools
+vagrant use base boxes
+
+VBoxManage --version
+vagrant --version 
+
+----
+
+
+vagrant file need
+vagrant up
+vagrant ssh -> go in box 
+vagrant halt > stop
+
+
+---
+
+apt install nginx
+
+nginx -v 
+
+systemctl status nginx
+
+--- 
+
+nginx files and directories : 
+
+/etc/nginx/nginx.conf
+conf.d
+sites-available
+sites-enabled **
+
+
+also 
+
+/var/log/nginx
+
+/var/www  /html => file served to cleint
+
+
+----
+
+nginx command :
+
+sudo su -
+
+systemctl status nginx --no-pager
+          stop/start/reload 
+
+is-active nginx
+
+nginx -h
+nginx -t : test config
+nginx -T : test and print in one place
+
+
+---
+
+inside nginx 
+
+/etc/nginx/nginx.conf
+
+use view to see inside 
+
+blocks -> directives -> {}
+
+----
+
+configure a vm :
+
+
+sudo su -
+
+symlink , unlink 
+
+remove default nginx link
+
+cd /etc/nginx/sites-available
+ls -ltr
+unlink default
+
+vim /etc/nginx/conf.d/samplewebsitename.local.conf
+
+
+server {
+  // listen directorie
+  // default_server is directive
+  listen 80 default_server;
+
+  server_name samplewebsitename.local www.samplewebsitename.local
+
+  // what file use when response to request
+  index index.html index.htm 
+
+  // put profile public file inside it.
+  root /var/www/samplewebsitename.local;
+
+
+}
+
+nginx -t 
+
+systemctl reload/status nginx
+
+
+mkdir /var/www/samplewebsitename.local
+
+
+
+---
+
+add files to root directory 
+
+copy files to root directory(/var/www/samplewebsitename.local)
+css , js ,index , image , other html files
+
+
+to keep site safe we need prevent users from writing 
+
+
+find /var/www/samplewebsitename.local -type f -exec chmod 644 {} \;
+
+find /var/www/samplewebsitename.local -type d -exec chmod 755 {} \;
+
+
+----
+
+location directive :
+allow us to extend our configuration based on uri
+
+server {
+  ...server ,
+  location / {
+    try_files $uri $uri/ =404;
+  }
+
+  location /images {
+    // allow browser list files in that directory
+    autoindex on;
+  }
+
+  error_page 404 /404.html;
+  location = /404.html {
+    internal;
+  }
+
+  error_page 500, 502, 503, 504 /50x.html;
+  location = /50x.html {
+    internal;
+  }
+}
+
+
+------------------------
+
+log with nginx :
+
+/etc/nginx/conf.d
+
+access_log
+error_log 
+
+
+in 
+server {
+  access_log /var/log/nginx/samplewebsitename.local.access.log
+  error_log /var/log/nginx/samplewebsitename.local.error.log
+}
+
+----------------------
+
+trouble shooting 
+
+nginx -t
+
+sudo systemctl status/reload nginx 
+
+verfiy the ports 
+// list open files
+sud lsof -P -n -i :80 -i :443 | grep LISTEN
+
+or 
+
+sudo netstat -plan | grep nginx
+
+
+
+tail -f /var/logs/nignx/*.log
+
+---------------------
+
+
+nginx for your stack
+
+
+os -> web server -> db -> script language (web App)
+
+
+dynamic :
+
+location ~\.php$ {
+  // use include to bring something outde side config 
+  include snippets/fastcgi-php.conf
+  // unix socket
+  fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+  fastcgi_intercept_errors on;
+}
+
+
+---------------------------------
+
+db add :
+
+add your db ,
+set root password
+disable remote connections
+remove anonymous account 
+
+
+
+use a tools
+mysql_secure_installition
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
