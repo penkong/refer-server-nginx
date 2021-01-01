@@ -1,0 +1,128 @@
+nslookup www.sdfsdf.com
+
+each request through tcp 
+setup tcp session :
+become 3 req , with flags: syn , syn and ack , ack 
+there are several headers 
+
+fourth add )frame header : actual data sent 
+third add )Ethernet header : info about mac addresses
+second add )IPV4 header : info related to ip address also responsible of delivery of each packet
+               , length, flags , and next header
+first add )TCP header : source port , distantion port 443 , window size ...
+
+
+----
+
+capture data sent by http :
+one layer add to headers
+
+http headers: add info of req to headers
+
+--- 
+
+now https : 
+http over tls 
+
+
+it has 2 more header layer
+
+tls : it contain record layer 
+it is responsible for encryption of data
+
+
+========================
+
+encryption :
+
+symmetric encryption:
+(key are same)
+
+data + key = encrypted -----> 
+encrypted + key = data
+
+symmetric algo : DES(old) , 3DES(old) , AES (modern) 
+advanced encryption system - high length key
+
+
+---
+
+data --> hash func --> hash (fixed length always)
+dont need key normally .
+
+
+hash algos :
+
+md5 (128 bit) --> create : md5 <name of file>
+
+sha sha-1    160bit
+    sha-256  256bit
+    sha-512  512bit
+command : shasum <file name default use sha-1>
+          shasum -a 256 <name of file>
+          shasum -a 512 <name of file>
+
+hmac can be used with 2 top hash algo
+(work with salt)
+
+---
+
+asymmetric keys and encryption :
+
+private , public 
+owner always keep it , public send to world
+
+from sender : data + public > encrypted data > owner : decrypt + private.public > draw out data
+
+on receiver : data + encrypted hash come in > 1)hash func hash data , 2)encrypted hash decrypt with 
+public key on receiver (already has public key) > 1 will compoare wiht 2
+
+---
+
+RSA (modern asymmetric) :
+it is public key crypto system 
+key length can be 1024 2048 3072 4096
+
+
+PKI : public key infrastructure
+set of different protocols , algos , certificates 
+use for vpn and ... 
+
+what is certificate ??
+digital entity.
+set of data , public key of owner of certificate is most important part
+pki make sure public key of one provider is trusted by other group.
+chain of trust.
+
+what are in certificate?
+info about owner(company) , 
+issuer(who signed it) , 
+signature(? encrypted hash encrypted with private key and put it there) , 
+public key
+
+-----------------
+
+CA : certification authority server ,
+also work with opnessl
+
+
+
+using opnessl for RSA key generation
+opnessl genrsa --> it generate private key 
+but we need to encrypt private key 
+opnessl genrsa -aes256 || -des3
+but we must put it in file 
+
+Production of private and public key with openssl :
+
+opnessl genrsa -aes256 -out private.pem
+pem is extension used for files that include certificate or private key
+what about public key ?
+it stored in private key
+// -outform PEM -pubout : draw out public key
+openssl rsa -in private.pem -outform PEM -pubout -out public.pem
+
+
+
+openssl genrsa -aes256 4096 
+
