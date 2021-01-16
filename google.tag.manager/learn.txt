@@ -1,0 +1,192 @@
+google tag manager 
+
+why
+
+*install wasp addons 
+
+*centeralized management 
+
+*speed and agility 
+
+*corporate governance and process
+
+*data accuracy 
+
+*increased automation
+
+base code by contaienr one time and manage it through management tool
+dynamically track click links and form 
+
+
+UNDERSTANDING THE GTM HIERARCHY :
+tags , triggers , and vars
+
+at heart of GTM  is contaienr 
+this is what going to contain all of your scripts adn 
+system will inject into page , 
+
+each page can have 
+analytic base tags , adwords tags , marketing automation tags 
+video tracking tags , ecommerce tracking tags ,
+
+
+manager put simple snippet js code and it will put all tags in html
+do this on load time 
+
+
+container sit in that pages 
+
+it  contain 3 type of entities  :
+tags : are code snippets that collect and manipulate data
+  most common analytic tags , some of them are built in in GTM
+  
+triggers : are rules and conditions that will specify to gtm to
+  tell to each tag when to fire .
+
+variables : are bits of info that can be stored and access by your 
+  tags and triggers 
+
+
+tags are logics 
+triggers are actions 
+variables are args for them 
+
+
+
+we can have multi contain
+but most commonly one container per website and domain
+each contain has its own entities
+
+
+
+---------------------------
+
+
+permissions and security :
+
+on contain click 
+admin panel top 
+user management
+
+on creation 
+ask permissions at 
+account level and contaienr level
+
+
+
+
+
+create an account and contaienr :
+in admin panel create
+
+after creation 
+install google tag manager scripts will given
+high in head 
+high in body
+
+
+paste it on every page of your site (cms do this )
+
+then must publish it to work
+
+
+
+
+
+
+
+built in tags : templ
+like google analytics 
+click tags 
+new 
+tag configuration
+
+must define track type
+page view or track or ...
+
+put id from google analytics
+
+do setttings 
+
+click save 
+
+now need add triggers 
+
+all pages
+
+give name for tage 
+
+now publish time 
+
+submit on top right / publish
+give name , continue 
+
+
+-------------------------
+
+variables :
+
+set it once and use it more and more .
+
+like analytics number 
+
+for different type of env 
+
+var example 
+
+URL (update in each) , GA account id 
+
+Transaction Totla = {insert cart checkout total here}
+
+TimeZone = ''
+
+
+hands on 
+
+builtin vars 
+userdefined vars
+
+add what you want 
+
+back to tags 
+
+click on your tag (ga)
+
+for ex : 
+in custom dimension 
+add 
+give it index 1
+{{Page URL}}
+
+
+for ga id 
+add vars 
+constants 
+
+
+custom js vars 
+when for ex we want to know total of shopping card 
+
+
+
+local time of user 
+new 
+custom javasc 
+function() {
+  return new Date().getHour()
+}
+
+----------------------------
+
+create triggers :
+
+
+
+
+
+
+
+
+
+
+
