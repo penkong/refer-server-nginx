@@ -1,0 +1,261 @@
+nuvei options :
+
+PCI-descoping : Payment Card Industry  
+3D-Secure-compliant service
+and more 
+
+
+
+for descoping PCI : API + SDK
+
+---------
+
+must choose integration method!!!
+
+Factors to consider when choosing a Nuvei Integration Method :
+
+factor 1 : .Your industry segment and business needs , 
+single payment ? no , 
+recurring payments ? yes , 
+repeat customers? don't know
+
+our business is PSD2 or 3DS ??
+
+what is 3DS : an authentication protocol 
+by visa 3Domain-Secure authentication is the interaction between 
+your card issuing bank and you and ask you to enter a special 
+security code to verify you are legitimate owner of banking.
+
+D1 : acquirer domain (the merchant and the bank to which the money is paid)
+D2 : the issuer domain (the bank that issued the cardholder’s card)
+D3 : interoperability domain (the infrastructure used by the card scheme to enforce 
+     3DS protocol, i.e the Internet, the Merchant Plug-in, and Access Control Server - ACS)
+
+merchants should contact their payments service provider.
+
+3DS v1.0 vs 3DS v2.0 : more frictionless authentication and a better 
+user experience across devices.
+
+
+what is psd2 : Payment Service Directive (EU) 2015/2366
+to regulate payment services and payment service providers throughout the European Union
+What are the biggest changes?
+banks opening their payment services to other companies, 
+and it called Third Party Payment Services Providers (TPPs)
+
+PSD2 regulates and harmonizes two types of services: 
+1: Account Information Services (AIS)
+include the collection and storage of information from a customer’s 
+different bank accounts in a single place,
+
+2: Payment Initiation Services (PIS)
+other providers facilitate the use of online banking to 
+make payments online.
+to initiate a payment from the consumer’s account to the merchant’s account by creating 
+an interface to bridge both accounts, filling in the information 
+needed for the bank transfer 
+PS2D also allows clients to make payments to a third party from a bank’s 
+app using any of the client’s accounts
+PSD has SCA(strong customer authentication)
+
+as BBVA’s Venture Solutions Architect
+
+PSD2 now makes it possible for consumers to authorize a third party to add their financial 
+information on their behalf and make payments on their behalf
+using their bank account.
+
+PSD2 regulations ensure that banks will create mechanisms to enable third party 
+providers to work securely, reliably and rapidly with the 
+bank’s services and data on behalf and with the consent of their customers.
+
+open bank project 
+includes a set of tools and softwares to handle TPP Registry, API Gateway, Consent Management,
+Risk Engine, Multi-factor Authentication and SCA and 
+Berlin Group specifications.
+
+after psd2 
+
+customer fintech app --- bank 1
+                     --- bank 2
+                     --- bank 3
+
+
+
+factor 2 : size, skill set, extensibility, and availability of development resources.
+
+factor 3 : PCI DSS certification level
+Payment Card Industry Data Security Standard 
+each Nuvei product set (integration type) specifies the required level of your involvement 
+in the collection of customer credit card details, as well as 
+your PCI reporting responsibilities,
+
+
+nuvei inegration type 
+pure api                  the merchant collect 
+hosted payment page       Nuvei 
+web sdk fields            nuvei collect from merchant pag 
+API methods(safecharge)   merchant collect and pass to nuvei
+sever to server           server sdk and api only inegration
+
+---------
+
+
+my current understanding is we are using
+check out page with psd2
+
+to maintain our frontend ---> Server to Server 
+
+
+-----------------------------
+
+Direct Merchant Notifications 
+
+After the merchant sends a transaction to Nuvei, Nuvei communicates with 
+the customer’s bank to transfer the deposit from the customer’s account to 
+the merchant’s account. When Nuvei receives a response from the bank, 
+Nuvei notifies the merchant of the result of the deposit via DMN.
+
+sometimes merchant must inform user from un successful transaction
+
+depostiDMN : {
+  Transaction Parameters : {
+    params sent to cashier and outcome of PPP (Public-private partnerships)
+  }
+  Payment Parameters : {
+    unprotected payment method information,
+    (name on card, expiration data, the last four digits of the credit card number, token, etc.).
+  }
+  Customer Details : {
+    customer’s personal information
+    (first and last name, the address, the contact details, etc.)
+    instruct Nuvei to remove them from the response.
+  }
+  Other Parameters : {
+    Merchant custom fields and other miscellaneous parameters
+  }
+}
+
+
+
+
+Integrating DMNs
+
+merchant integrate with Nuvei DMN , 
+nuvei send https 
+to merchant web server 
+without customer browser
+
+to integration
+merchant must give 
+ip address of url 
+that leads to cb in your server 
+to nuvei ,
+a module listen to recieve https requests.
+https://myserver.com/SafeCharge/dmn/receiveNotification
+
+GET
+https://myserver.com/SafeCharge/dmn/receiveNotification?
+ppp_status=OK&
+PPP_TransactionID=547&
+TransactionID=45402&
+userid=111&
+merchant_unique_id=234234unique_id&
+customData=342dssdee&
+productId=12345product_id&
+first_name=Diyan&
+last_name=Yordanov&
+email=dido%40domain.com&
+totalAmount=47.25&
+currency=USD&
+Status=APPROVED
+
+POST 
+info will come in body .
+
+must inform nuvei from POST or GET
+
+must withlist IP addresses :
+test : 91.220.189.12–91.220.189.16 / 52.16.211.57, 52.17.110.204
+live : 194.247.167.32 / 87.120.10.184 – 87.120.10.187
+
+use merchant_unique_id
+enables mapping between responses coming from DMN data.
+
+provide to Nuvei k, ip and URL of DMN listener.
+
+
+when you received message 
+send 200
+if not it send it for 15 min for 24 hours.
+
+
+
+
+Alternative Payment Methods (APMs) and DMN Notifications
+
+
+result of the transaction in  status and in payment_method, 
+which identifies the payment method that the customer selected.
+
+Approved , Declined , Pending
+
+
+
+A checksum is a small-sized block of data derived from another block of 
+digital data for the purpose of detecting errors that may have been introduced 
+during its transmission or storage. By themselves, checksums are often used 
+to verify data integrity but are not relied upon to verify data authenticity.
+
+checksum = a value to check ,data integrity, validity of data.
+
+
+
+
+also nuvei send checksum with http request 
+to verify use it 
+that label is 
+advanceResponseChecksum
+
+To authenticate a DMN response checksum:
+Concatenate the following parameters in the exact order as follows:
+The merchant secret key followed by the parameters received from the DMN callback:
+totalAmount, currency, responseTimeStamp (in GMT), PPP_TransactionID, Status, productId.
+
+do sha-256 on top info 
+compare it with 
+advanceResponseChecksum
+utf-8
+
+
+
+-------------------------------
+
+Pre-deposit DMN :
+
+purpose of the pre-deposit DMN is the merchant to review the deposit prior accepting the deposit. 
+checks the amount of the deposit and/or the deposit payment method.
+
+Pre-deposit DMN: {
+  Transaction Parameters: {
+    parameters of the transaction originally sent to the Cashier and the parameters 
+    of the outcome of the PPP’s work (including the response checksum).
+    not present in the DMN: ppp_status, along with all fiscal related 
+    parameters and threeD parameters
+  }
+  Payment Parameters: {
+    unprotected payment method information, 
+    (name on card, expiration data, the last four digits of the credit card number, token, etc.
+  }
+  Customer Details: {}
+  Other Parameters : {}
+}
+
+
+Handling Pre-deposit DMNs
+
+Nuvei expects to receive from the merchant a DMN message response.
+Possible response values are as follows:
+Action: Approve – The deposit will be processed
+Action: Decline – The deposit is declined.
+
+it will not send again
