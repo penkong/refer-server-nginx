@@ -259,3 +259,70 @@ Action: Approve – The deposit will be processed
 Action: Decline – The deposit is declined.
 
 it will not send again
+
+======================================================
+
+
+Checkout :
+
+step 1 : prep authentication 
+
+you must create and include a SHA-256 checksum into your request.
+
+merchant_id=283475&
+merchant_site_id=89123755&
+total_amount=15&
+currency=USD&
+user_token_id=test@test.com&
+item_name_1=item1&
+item_amount_1=15&
+item_quantity_1=1&
+time_stamp=2011-01-056:04:26&
+version=4.0.0&
+notify_url=https%3A%2F%2Fnotify.merchant.com
+
+
+<secret><concat values of top>
+
+run this through sha-256 encryption
+
+place generated value in 
+checksum = value
+
+
+
+
+submit request to checkout page 
+
+https://ppp-test.safecharge.com/ppp/purchase.do?
+currency=EUR&
+item_name_1=Test+Product&
+item_number_1=1&
+item_quantity_1=1&
+item_amount_1=50.00&
+numberofitems=1&
+encoding=utf-8&
+merchant_id=640817950595693192&
+merchant_site_id=148133&time_stamp=2018-05-15.02%3A35%3A21&
+version=4.0.0&
+user_token_id=ran100418_scobd%40mailinator.com&
+user_token=auto&
+total_amount=50.00&
+notify_url=https%3A%2F%2Fsandbox.safecharge.com%2Flib%2Fdemo_process_request%2Fresponse.php&
+theme_id=178113&
+checksum=66ce9f4ce1e5f47298e7e5e457d0b21ca8d6a668d549240929924054db6d1a21
+
+
+
+
+
+step 3 handle response :
+
+Sueccess , Pending , Back , DMN 
+
+
+
+
+
+
+
