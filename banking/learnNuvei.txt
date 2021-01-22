@@ -321,8 +321,8 @@ step 3 handle response :
 Sueccess , Pending , Back , DMN 
 
 
+-----------------------------------------------------------
 
 
-
-
-
+Payment Card Industry (PCI) Data Security Standards (DSS)
+self-assessment questionnaire (SAQ)
